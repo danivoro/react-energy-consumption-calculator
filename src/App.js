@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [sliderValue, setSliderValue] = useState(50);
-  const [sliderValue2, setSliderValue2] = useState(50);
-  const [textInputValue, setTextInputValue] = useState("");
+  const [powersliderValue, setSliderValue] = useState(50);
+  const [timeSliderValue, setSliderValue2] = useState(1);
+  const [energyCostTextInputValue, setTextInputValue] = useState("");
 
   const handleSliderChange = (event) => {
     const value = event.target.value;
@@ -21,6 +21,9 @@ function App() {
     setTextInputValue(value);
   };
 
+  let dailyConsumption = powersliderValue * timeSliderValue;
+  let monthlyConsumptionInKWh = dailyConsumption * 30 / 1000;
+
   return (
     <div className="App">
       <h1>Energy Consumption Calculator</h1>
@@ -32,10 +35,11 @@ function App() {
             min="0"
             max="3000"
             step="50"
-            value={sliderValue}
+            className="power"
+            value={powersliderValue}
             onChange={handleSliderChange}
           />
-          <p>Selected value: {sliderValue}</p>
+          <p>Selected value: {powersliderValue}</p>
         </div>
         <div>
           <h3>Usage Time (h/Day)</h3>
@@ -43,26 +47,29 @@ function App() {
             type="range"
             min="1"
             max="24"
-            value={sliderValue2}
+            value={timeSliderValue}
             onChange={handleSliderChange2}
           />
-          <p>Selected value: {sliderValue2}</p>
+          <p>Selected value: {timeSliderValue}</p>
         </div>
         <div>
-          Daily consumption: {sliderValue * sliderValue2} Wh (
-          {(sliderValue * sliderValue2) / 1000} KWh){" "}
+          Daily consumption: {dailyConsumption} Wh (
+          {dailyConsumption / 1000} kWh){" "}
+        </div> 
+        <div>
+          Monthly Consumption: {monthlyConsumptionInKWh} kWh
         </div>
         <div>
-          <h3>Energy Cost Eur/KWh</h3>
+          <h3>Energy Cost (Eur/kWh)</h3>
           <input
             type="text"
-            value={textInputValue}
+            value={energyCostTextInputValue}
             onChange={handleTextInputChange}
           />
           <p>
             Monthly Cost:{" "}
             {(
-              ((textInputValue * sliderValue * sliderValue2) / 1000) *
+              ((energyCostTextInputValue * dailyConsumption) / 1000) *
               30
             ).toFixed(2)}{" "}
             Eur.
@@ -70,7 +77,7 @@ function App() {
           <p>
             Anual Cost:{" "}
             {(
-              ((textInputValue * sliderValue * sliderValue2) / 1000) *
+              ((energyCostTextInputValue * dailyConsumption) / 1000) *
               12 *
               30
             ).toFixed(2)}{" "}
@@ -78,7 +85,7 @@ function App() {
           </p>
           <div>
             Anual consumption:{" "}
-            {(((sliderValue * sliderValue2) / 10000) * 30 * 12).toFixed(2)} KWh{" "}
+            {((dailyConsumption / 10000) * 30 * 12).toFixed(2)} kWh{" "}
           </div>
         </div>
       </div>
